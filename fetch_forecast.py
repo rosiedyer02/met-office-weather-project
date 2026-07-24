@@ -1,6 +1,7 @@
 import os
 import requests
 from dotenv import load_dotenv
+from parser import parse_forecast
 
 load_dotenv()
 
@@ -20,5 +21,9 @@ headers = {
 
 response = requests.get(BASE_URL, headers=headers, params=params)
 
-print("Status code:", response.status_code)
-print(response.json())
+if response.status_code == 200:
+    forecasts = parse_forecast(response.json())
+    for day in forecasts:
+        print(day)
+else:
+    print(f"Request failed: {response.status_code}")
