@@ -2,6 +2,7 @@ import os
 import requests
 from dotenv import load_dotenv
 from parser import parse_forecast
+from storage import save_forecasts
 
 load_dotenv()
 
@@ -23,7 +24,7 @@ response = requests.get(BASE_URL, headers=headers, params=params)
 
 if response.status_code == 200:
     forecasts = parse_forecast(response.json())
-    for day in forecasts:
-        print(day)
+    save_forecasts("Plymouth", forecasts)
+    print(f"Saved {len(forecasts)} days of forecast data for Plymouth")
 else:
     print(f"Request failed: {response.status_code}")
