@@ -1,0 +1,20 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Weather forecast pipeline
+
+Resources:
+  WeatherForecastsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: weather-forecasts
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: location
+          AttributeType: S
+        - AttributeName: time
+          AttributeType: S
+      KeySchema:
+        - AttributeName: location
+          KeyType: HASH
+        - AttributeName: time
+          KeyType: RANGE
