@@ -18,3 +18,31 @@ Resources:
           KeyType: HASH
         - AttributeName: time
           KeyType: RANGE
+
+  FetchForecastFunction:
+    Type: AWS::Serverless::Function
+    Metadata:
+      BuildMethod: python3.12
+    Properties:
+      FunctionName: fetch-weather-forecast
+      Handler: app.lambda_handler
+      Runtime: python3.12
+      CodeUri: .
+      Timeout: 30
+      Environment:
+        Variables:
+          DATAHUB_API_KEY: !Ref DataHubApiKey
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref WeatherForecastsTable
+      Events:
+        ScheduledFetch:
+          Type: Schedule
+          Properties:
+            Schedule: rate(3 hours)
+
+Parameters:
+  DataHubApiKey:
+    Type: String
+    NoEcho: true
+    Description: API key for the Met Office DataHub
