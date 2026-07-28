@@ -41,6 +41,26 @@ Resources:
           Properties:
             Schedule: rate(3 hours)
 
+  ReadForecastFunction:
+    Type: AWS::Serverless::Function
+    Metadata:
+      BuildMethod: python3.12
+    Properties:
+      FunctionName: read-weather-forecast
+      Handler: read_forecast.lambda_handler
+      Runtime: python3.12
+      CodeUri: .
+      Timeout: 10
+      Policies:
+        - DynamoDBReadPolicy:
+            TableName: !Ref WeatherForecastsTable
+      Events:
+        ApiRequest:
+          Type: Api
+          Properties:
+            Path: /forecast
+            Method: get
+
 Parameters:
   DataHubApiKey:
     Type: String
